@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>1971226 김인우</title>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript"></script>
+        <script src="/static/mqttio.js" type="text/javascript"></script>
+        <script>
+                window .addEventListener ("load", function() { // IP만 끊어내는 코드
+                var url = new String (document .location );
+                ip = (url.split ("//"))[1]; // ip = "224...:8080/"
+                ip = (ip.split (":"))[0]; // ip = "224..."
+                document.getElementById ("broker").value = ip
+                });
+        </script> 
+        <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function() { 
+                // 시간을 1초마다 갱신하는 코드
+                realTimer();
+                setInterval(realTimer, 1000);
+            })
+            function realTimer(){ 
+                // 현재 시간을 표시하는 코드
+                var d = new Date();
+                var t = document.getElementById("nowTime");
+                t.style.fontSize="18px";
+                t.innerHTML = d.toLocaleString(); 
+            }
+        </script>
+        <style>
+            canvas {background-color: aquamarine;}
+            @keyframes fireAnimation {
+                from {color : yellow; font-size: 300%;}
+                to {color : red; font-size: 300%;}
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <h2 id="h2">라즈베리파이를 활용한 화재경보기</h2>
+            <hr>
+            <b><span id="nowTime"></span></b>
+            <form id="connection-form">
+                <b>관리자 IP: </b>
+                <input type="text" id="broker" value=""><br>
+                <input type="button" onclick="startConnect()" value="연결 시작">
+                <input type="button" onclick="startDisconnect()" value="연결 종료">
+            </form>  
+            <hr>
+
+            <div id="fire_info" style="color:yellow; display: none;">
+                <h3>화 재 대 피 요 령</h3>
+                1. 엘리베이터를 피하고 비상계단을 이용하여 대피하기.<br>
+                2. 아래층으로 대피할 수 없을시 옥상으로 대피하기.<br>
+                3. 화재 건물 내 이동 시 낮은 자세로 이동하기.<br>
+                4. 불길 통과 시 물에 적신 수건 사용하여 얼굴, 몸 보호하기<br>
+                5. 건물 내부 문을 열기 전 손잡이를 만져본 후 뜨거울 시 내부 화재 확률이 높으니 확인 후 문열기<br>
+                6. 건물 내부에 갇힐 시 문틈을 젖은 수건 등으로 막아주기.<br>
+                7. 옷에 불이 붙을 시, 눈과 입을 막은 후 바닥에 뒹굴기<br><hr>
+            </div>
+
+            <form id = "LED-control-form">
+                <b>LED Control : </b>
+                <label>ON
+                <input type="radio" value="1" name= "led" id="ledOn" onchange="publish('ledChange', this.value)">
+                </label>
+                <label>OFF
+                <input type="radio" value="0" name= "led" id="ledOff" onchange="publish('ledChange', this.value)" checked="checked">
+                </label>
+            </form>
+
+            <form id = "Camera-control-form">
+                <b>Camera Control : </b>
+                <label>ON
+                <input type="radio" value="1" name= "camera" id="cameraOn" onchange="publish('cameraChange', 'cameraOn')">
+                </label>
+                <label>OFF
+                <input type="radio" value="0" name= "camera" id="cameraOff" onchange="publish('cameraChange', 'cameraOff')" checked="checked">
+                </label>
+            </form>
+
+            <div id="ConnectMessage"></div>
+            <canvas id="myCanvas" width="520" height="400"></canvas>
+            <div id="StateMessage"></div>
+
+            <table>
+                <tr>
+                    <td width="170" align="center"><img src="{{url_for('static', filename='image/temp.png')}}" 
+                        alt="온도" width="150" height="100"></td>
+                    <td width="170" align="center"><img src="{{url_for('static', filename='image/humi.png')}}" 
+                        alt="습도" width="150" height="100"></td>
+                    <td width="170" align="center"><img src="{{url_for('static', filename='image/lux.png')}}" 
+                        alt="조도" width="150" height="100"></td>
+                </tr>
+                <tr>
+                    <td width="170" align="center"><div id="temp"></div></td>
+                    <td width="170" align="center"><div id="humi"></div></td>
+                    <td width="170" align="center"><div id="lux"></div></td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>
