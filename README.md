@@ -18,5 +18,5 @@
 
 ## 시연 영상
 
-https://drive.google.com/drive/folders/1ptTEFgwg5NntpqmSiDnwnMOsh-RVM89Z?usp=share_link
+https://drive.google.com/file/d/1VcKfroAnIVmoX0bd04RwcRbRY-Eq6-jW/view?usp=share_link
 
